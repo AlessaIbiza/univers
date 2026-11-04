@@ -186,7 +186,12 @@ else if(D.teaser){const tb=$("teaser");tb.hidden=false;tb.onclick=()=>{curKey=nu
  let dev=lg(DV);if(!dev){dev=crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now();ls(DV,dev)}
  const open=()=>{$("gate").hidden=true;$("buy").hidden=true;$("content").classList.add("on");renderBlocs();if(D.video)setupFilm()},shut=()=>{$("content").classList.remove("on");$("gate").hidden=false;if($("buy").getAttribute("href"))$("buy").hidden=false};
  const pass=lg(P);
- if(pass){open();fetch(API+"/verifier",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pass})}).then(r=>r.json()).then(r=>{if(r&&r.ok===false){try{localStorage.removeItem(P)}catch(_){}shut()}}).catch(()=>{})}else shut();
+ const verif=p=>fetch(API+"/verifier",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pass:p})}).then(r=>r.json()).then(r=>{if(r&&r.ok===false){try{localStorage.removeItem(P)}catch(_){}shut()}}).catch(()=>{});
+ if(pass){open();verif(pass)}else shut();
+ // Une appli posée sur l'écran d'accueil reprend sans recharger la page : on revérifie à chaque retour
+ addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){let p=null;try{p=localStorage.getItem(P)}catch(_){}if(p)verif(p)}});
+ addEventListener("pageshow",e=>{if(e.persisted){let p=null;try{p=localStorage.getItem(P)}catch(_){}if(p)verif(p)}});
+
  $("gate").onsubmit=async e=>{e.preventDefault();const b=$("ok"),er=$("err"),email=$("mail").value.trim();er.textContent="";b.disabled=true;b.textContent="Un instant…";
   try{const r=await (await fetch(API+"/activer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,produit:D.slug,appareil:dev,tactile:navigator.maxTouchPoints>1})})).json();
    if(r.ok){ls(P,r.pass);open()}
