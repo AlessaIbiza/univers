@@ -45,6 +45,9 @@ h1{font:400 clamp(40px,11vw,64px)/1 var(--display);text-align:center;letter-spac
 .play:disabled{opacity:.35;cursor:default}
 .play svg{width:16px;height:16px}
 .ep.on .play{background:var(--accent);color:var(--night)}
+.hero img{aspect-ratio:1998/1080;width:min(1100px,100%)}
+.fkeep{display:block;margin:12px auto 0;background:none;border:1px solid var(--muted);color:inherit;border-radius:999px;padding:10px 18px;font:600 13px var(--sans);cursor:pointer}
+.fkeep.ok{border-color:transparent;opacity:.8}
 .dl{background:none;border:0;color:var(--muted);font:600 11px var(--sans);cursor:pointer;padding:4px}
 .dl.ok{color:var(--accent)}
 .jours{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
@@ -108,7 +111,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
  <div id="content">
   <div class="intro"><p>Tu crois regarder un film… mais c&#x27;est lui qui te regarde.</p><p>Karma, c&#x27;est pas juste un film. C&#x27;est une traversée, une expérience. Une plongée en plein cœur de cette dualité qu&#x27;on vit tous : ce combat intérieur entre l&#x27;ombre et la lumière.</p></div>
   <div class="avant"><b>Avant de regarder</b>1 h 20 de film. Installe-toi au calme, avec un casque ou de bonnes enceintes, et laisse-toi traverser. Ton accès est à vie : tu peux le revoir quand tu veux.</div>
-  <section class="film" id="filmBox" hidden><video id="film" controls playsinline preload="none"></video><p class="fnote" id="fnote"></p></section>
+  <section class="film" id="filmBox" hidden><video id="film" controls playsinline preload="none"></video><p class="fnote" id="fnote"></p><button type="button" class="fkeep" id="fkeep">⬇︎ Garder le film pour le regarder sans connexion</button><p class="fnote" id="fknote"></p></section>
   <div id="blocs"></div>
   <section class="docs" id="docs" hidden><div class="bloc"><h2>Tes documents</h2></div><div id="docList"></div></section>
   <section class="inst" id="inst" hidden></section>
@@ -168,13 +171,30 @@ audio.addEventListener("timeupdate",()=>{const d=audio.duration||0;$("pbar").sty
 $("pp").onclick=()=>audio.paused?audio.play():audio.pause();
 $("back").onclick=()=>{audio.currentTime=Math.max(0,audio.currentTime-15)};$("fwd").onclick=()=>{audio.currentTime+=30};
 $("bar").onclick=e=>{if(!audio.duration)return;const r=e.currentTarget.getBoundingClientRect();audio.currentTime=audio.duration*(e.clientX-r.left)/r.width};
+// Garder le film : la liste et les 240 morceaux sont rangés dans la mémoire du téléphone
+const FCACHE=D.slug+"-film-v1",nu=u=>u.split("?")[0];
+async function filmKept(){try{const c=await caches.open(FCACHE);return !!(await c.match(canon(D.video.k)))}catch(_){return false}}
+async function filmKeptUI(){const b=$("fkeep");if(!b)return;if(await filmKept()){b.textContent="✓ Film gardé sur cet appareil";b.classList.add("ok")}b.onclick=keepFilm}
+async function keepFilm(){const b=$("fkeep"),n=$("fknote");if(b.classList.contains("ok")||b.disabled)return;b.disabled=true;
+ try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+  const r=await fetch(signed(D.video.k));if(!r.ok)throw 0;const txt=await r.text(),base=canon(D.video.k);
+  const segs=txt.split("\n").filter(l=>l.trim()&&!l.startsWith("#")).map(l=>new URL(l.trim(),base).href);
+  const c=await caches.open(FCACHE);let i=0;
+  for(const u of segs){const k=nu(u);if(!(await c.match(k))){const sr=await fetch(u);if(!sr.ok)throw 0;await c.put(k,sr)}i++;b.textContent="Un instant… "+Math.round(100*i/segs.length)+" %"}
+  const local=txt.split("\n").map(l=>l.trim()&&!l.startsWith("#")?nu(new URL(l.trim(),base).href):l).join("\n");
+  await c.put(base,new Response(local,{headers:{"Content-Type":"application/vnd.apple.mpegurl"}}));
+  b.textContent="✓ Film gardé sur cet appareil";b.classList.add("ok");n.textContent="Tu peux le regarder sans connexion."}
+ catch(e){b.textContent="⬇︎ Reprendre le téléchargement";n.textContent=(e&&e.name==="QuotaExceededError")?"Pas assez de place sur cet appareil (il faut environ 350 Mo).":"Le téléchargement s'est interrompu. Reprends avec du réseau : ce qui est déjà gardé n'est pas perdu."}
+ b.disabled=false}
 let filmReady=false;
 function setupFilm(){if(filmReady)return;filmReady=true;const v=$("film");$("filmBox").hidden=false;v.poster="poster.jpg";
  const src=signed(D.video.k);const pos=+g("pos_film")||0;
  v.addEventListener("loadedmetadata",()=>{if(pos&&pos<v.duration-10)v.currentTime=pos},{once:true});
  v.addEventListener("timeupdate",()=>{s("pos_film",v.currentTime)});
- if(v.canPlayType("application/vnd.apple.mpegurl")){v.src=src}
- else{const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js";sc.onload=()=>{if(window.Hls&&Hls.isSupported()){const h=new Hls();h.loadSource(src);h.attachMedia(v)}else{$("fnote").textContent="Ton navigateur ne lit pas ce film. Essaie avec Safari ou Chrome."}};sc.onerror=()=>{$("fnote").textContent="Le lecteur ne se charge pas. Vérifie ta connexion et recharge la page."};document.head.appendChild(sc)}
+ const nat=()=>{if(v.canPlayType("application/vnd.apple.mpegurl"))v.src=src;else $("fnote").textContent="Ton navigateur ne lit pas ce film. Essaie avec Safari ou Chrome."};
+ const go=()=>{if(window.Hls&&Hls.isSupported()){const h=new Hls({maxBufferLength:60});h.loadSource(src);h.attachMedia(v)}else nat()};
+ if(window.Hls)go();else{const sc=document.createElement("script");sc.src="hls.min.js";sc.onload=go;sc.onerror=nat;document.head.appendChild(sc)}
+ filmKeptUI();
  $("fnote").textContent="Le film reprend là où tu t'es arrêté.";}
 renderBlocs();
 if(D.teaser&&D.tvideo){const tb=$("teaser");tb.hidden=false;$("teaserL").textContent="Voir la bande-annonce";tb.onclick=()=>{const v=$("trailer");v.hidden=false;v.src="teaser.mp4";v.poster="poster.jpg";v.play().catch(()=>{});tb.hidden=true}}
