@@ -114,7 +114,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
  </form>
  <section class="buy" id="buy" href="https://www.lamagiedalessa.com/product-page/voyage-au-coeur-de-son-%C3%A2me" hidden>
   <h2>Tu n'as pas encore ta série ?</h2>
-  <button class="tz" id="tz" type="button" data-v="1" data-p="poster.jpg" aria-label="Voir la bande-annonce"><img src="poster.jpg" alt=""><span class="tzp" id="tzi">▶</span><span class="tzl" id="tzl">Voir la bande-annonce</span><i class="tzb"><b id="tzbb"></b></i></button>
+  <div class="tz" style="cursor:default"><img src="cover.jpg" alt=""></div>
   <ul><li>🎧 <b>7 jours</b> de Fiction audio immersive®</li><li>✨ Un voyage au cœur de ton âme, où <b>tu es le héros</b></li><li>♾️ <b>Accès à vie</b>, sur ton téléphone et ton ordinateur</li></ul>
   <a class="go" href="https://www.lamagiedalessa.com/product-page/voyage-au-coeur-de-son-%C3%A2me" target="_blank" rel="noopener">Je commande Se connecter à son âme</a>
   <p class="off">Pour toi, ou à offrir 🎁</p>
@@ -137,7 +137,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 </div></div>
 <audio id="audio" preload="none"></audio>
 <script>
-const D={"slug": "se-connecter-a-son-ame", "nom": "Se connecter à son âme", "blocs": [{"bloc": "Tes 7 jours", "items": [{"t": "Jour 1", "k": "se-connecter-a-son-ame/jour-01.mp3", "d": "25 min"}, {"t": "Jour 2", "k": "se-connecter-a-son-ame/jour-02.mp3", "d": "18 min"}, {"t": "Jour 3", "k": "se-connecter-a-son-ame/jour-03.mp3", "d": "17 min"}, {"t": "Jour 4", "k": "se-connecter-a-son-ame/jour-04.mp3", "d": "15 min"}, {"t": "Jour 5", "k": "se-connecter-a-son-ame/jour-05.mp3", "d": "20 min"}, {"t": "Jour 6", "k": "se-connecter-a-son-ame/jour-06.mp3", "d": "20 min"}, {"t": "Jour 7", "k": "se-connecter-a-son-ame/jour-07.mp3", "d": "22 min"}]}], "docs": [], "jours": false, "teaser": true, "video": null, "tvideo": true};
+const D={"slug": "se-connecter-a-son-ame", "nom": "Se connecter à son âme", "blocs": [{"bloc": "Tes 7 jours", "items": [{"t": "Jour 1", "k": "se-connecter-a-son-ame/jour-01.mp3", "d": "25 min"}, {"t": "Jour 2", "k": "se-connecter-a-son-ame/jour-02.mp3", "d": "18 min"}, {"t": "Jour 3", "k": "se-connecter-a-son-ame/jour-03.mp3", "d": "17 min"}, {"t": "Jour 4", "k": "se-connecter-a-son-ame/jour-04.mp3", "d": "15 min"}, {"t": "Jour 5", "k": "se-connecter-a-son-ame/jour-05.mp3", "d": "20 min"}, {"t": "Jour 6", "k": "se-connecter-a-son-ame/jour-06.mp3", "d": "20 min"}, {"t": "Jour 7", "k": "se-connecter-a-son-ame/jour-07.mp3", "d": "22 min"}]}], "docs": [], "jours": false, "teaser": false, "video": null, "tvideo": false};
 const $=id=>document.getElementById(id),audio=$("audio");
 const K=k=>D.slug+"_"+k,g=k=>{try{return localStorage.getItem(K(k))}catch(_){return null}},s=(k,v)=>{try{localStorage.setItem(K(k),v)}catch(_){}};
 const fmt=x=>{x=Math.max(0,Math.floor(x||0));return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")};
