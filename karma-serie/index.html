@@ -114,15 +114,15 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
  </form>
  <section class="buy" id="buy" href="https://www.lamagiedalessa.com/product-page/karma" hidden>
   <h2>Tu n'as pas encore ta série ?</h2>
-  <div class="tz" style="cursor:default"><img src="cover.jpg" alt=""></div>
-  <ul><li>🎧 <b>Une introduction et 7 épisodes</b> de Fiction audio immersive®</li><li>✨ Un voyage aux origines de la vie où <b>tu es le héros</b></li><li>♾️ <b>Accès à vie</b>, sur ton téléphone et ton ordinateur</li></ul>
+  <button class="tz" id="tz" type="button" data-v="0" data-p="cover.jpg" aria-label="Écouter la bande-annonce"><img src="cover.jpg" alt=""><span class="tzp" id="tzi">▶</span><span class="tzl" id="tzl">Écouter la bande-annonce</span><i class="tzb"><b id="tzbb"></b></i></button>
+  <ul><li>🎧 <b>7 épisodes</b> de Fiction audio immersive®</li><li>✨ Un voyage aux origines de la vie où <b>tu es le héros</b></li><li>♾️ <b>Accès à vie</b>, sur ton téléphone et ton ordinateur</li></ul>
   <a class="go" href="https://www.lamagiedalessa.com/product-page/karma" target="_blank" rel="noopener">Je commande Karma</a>
   <p class="off">Pour toi, ou à offrir 🎁</p>
  </section>
 
  <div id="content">
   <div class="intro"><p>Et si l&#x27;histoire n&#x27;était pas celle qu&#x27;on nous a racontée ?</p><p>Un voyage qui commence il y a des milliers d&#x27;années et qui nous ramène à l&#x27;origine même de la vie. Le moment est venu de nous souvenir.</p></div>
-  <div class="avant"><b>Avant d'écouter</b>Une introduction, puis 7 épisodes de 14 à 21 minutes. Casque sur les oreilles, yeux fermés, au calme. Jamais en conduisant. Écoute-les dans l&#x27;ordre.</div>
+  <div class="avant"><b>Avant d'écouter</b>7 épisodes de 14 à 21 minutes. Casque sur les oreilles, yeux fermés, au calme. Jamais en conduisant. Écoute-les dans l&#x27;ordre.</div>
   <section class="film" id="filmBox" hidden><video id="film" controls playsinline preload="none"></video><p class="fnote" id="fnote"></p></section>
   <div id="blocs"></div>
   <section class="docs" id="docs" hidden><div class="bloc"><h2>Tes documents</h2></div><div id="docList"></div></section>
@@ -137,7 +137,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 </div></div>
 <audio id="audio" preload="none"></audio>
 <script>
-const D={"slug": "karma-serie", "nom": "Karma", "blocs": [{"bloc": "La série", "items": [{"t": "Introduction", "k": "karma-serie/intro.mp3", "d": "4 min", "no": "✦"}, {"no": 1, "t": "Épisode 1", "k": "karma-serie/episode-01.mp3", "d": "16 min"}, {"no": 2, "t": "Épisode 2", "k": "karma-serie/episode-02.mp3", "d": "18 min"}, {"no": 3, "t": "Épisode 3", "k": "karma-serie/episode-03.mp3", "d": "19 min"}, {"no": 4, "t": "Épisode 4", "k": "karma-serie/episode-04.mp3", "d": "14 min"}, {"no": 5, "t": "Épisode 5", "k": "karma-serie/episode-05.mp3", "d": "19 min"}, {"no": 6, "t": "Épisode 6", "k": "karma-serie/episode-06.mp3", "d": "21 min"}, {"no": 7, "t": "Épisode 7", "k": "karma-serie/episode-07.mp3", "d": "16 min"}]}], "docs": [], "jours": false, "teaser": false, "video": null, "tvideo": false};
+const D={"slug": "karma-serie", "nom": "Karma", "blocs": [{"bloc": "La série", "items": [{"t": "Épisode 1", "k": "karma-serie/episode-01.mp3", "d": "16 min"}, {"t": "Épisode 2", "k": "karma-serie/episode-02.mp3", "d": "18 min"}, {"t": "Épisode 3", "k": "karma-serie/episode-03.mp3", "d": "19 min"}, {"t": "Épisode 4", "k": "karma-serie/episode-04.mp3", "d": "14 min"}, {"t": "Épisode 5", "k": "karma-serie/episode-05.mp3", "d": "19 min"}, {"t": "Épisode 6", "k": "karma-serie/episode-06.mp3", "d": "21 min"}, {"t": "Épisode 7", "k": "karma-serie/episode-07.mp3", "d": "16 min"}]}], "docs": [], "jours": false, "teaser": true, "video": null, "tvideo": false};
 const $=id=>document.getElementById(id),audio=$("audio");
 const K=k=>D.slug+"_"+k,g=k=>{try{return localStorage.getItem(K(k))}catch(_){return null}},s=(k,v)=>{try{localStorage.setItem(K(k),v)}catch(_){}};
 const fmt=x=>{x=Math.max(0,Math.floor(x||0));return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")};
@@ -201,7 +201,12 @@ else if(D.teaser){const tb=$("teaser");tb.hidden=false;tb.onclick=()=>{curKey=nu
  let dev=lg(DV);if(!dev){dev=crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now();ls(DV,dev)}
  const open=()=>{$("gate").hidden=true;$("buy").hidden=true;$("content").classList.add("on");renderBlocs();if(D.video)setupFilm()},shut=()=>{$("content").classList.remove("on");$("gate").hidden=false;if($("buy").getAttribute("href"))$("buy").hidden=false};
  const pass=lg(P);
- if(pass){open();fetch(API+"/verifier",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pass})}).then(r=>r.json()).then(r=>{if(r&&r.ok===false){try{localStorage.removeItem(P)}catch(_){}shut()}}).catch(()=>{})}else shut();
+ const verif=p=>fetch(API+"/verifier",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pass:p})}).then(r=>r.json()).then(r=>{if(r&&r.ok===false){try{localStorage.removeItem(P)}catch(_){}shut()}}).catch(()=>{});
+ if(pass){open();verif(pass)}else shut();
+ // Une appli posée sur l'écran d'accueil reprend sans recharger la page : on revérifie à chaque retour
+ addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){let p=null;try{p=localStorage.getItem(P)}catch(_){}if(p)verif(p)}});
+ addEventListener("pageshow",e=>{if(e.persisted){let p=null;try{p=localStorage.getItem(P)}catch(_){}if(p)verif(p)}});
+
  $("gate").onsubmit=async e=>{e.preventDefault();const b=$("ok"),er=$("err"),email=$("mail").value.trim();er.textContent="";b.disabled=true;b.textContent="Un instant…";
   try{const r=await (await fetch(API+"/activer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,produit:D.slug,appareil:dev,tactile:navigator.maxTouchPoints>1})})).json();
    if(r.ok){ls(P,r.pass);open()}
