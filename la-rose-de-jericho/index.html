@@ -114,7 +114,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
  </form>
  <section class="buy" id="buy" href="https://www.lamagiedalessa.com/product-page/la-rose-de-jericho-incarne-le-divin-sur-terre" hidden>
   <h2>Tu n'as pas encore ta série ?</h2>
-  <div class="tz" style="cursor:default"><img src="cover.jpg" alt=""></div>
+  <button class="tz" id="tz" type="button" data-v="0" data-p="cover.jpg" aria-label="Écouter la bande-annonce"><img src="cover.jpg" alt=""><span class="tzp" id="tzi">▶</span><span class="tzl" id="tzl">Écouter la bande-annonce</span><i class="tzb"><b id="tzbb"></b></i></button>
   <ul><li>🎧 <b>L'appel et 7 épisodes</b> de Fiction audio immersive®</li><li>✨ Un voyage intérieur où <b>tu es le héros</b>, pour incarner le divin sur Terre</li><li>♾️ <b>Accès à vie</b>, sur ton téléphone et ton ordinateur</li></ul>
   <a class="go" href="https://www.lamagiedalessa.com/product-page/la-rose-de-jericho-incarne-le-divin-sur-terre" target="_blank" rel="noopener">Je commande La Rose de Jéricho</a>
   <p class="off">Pour toi, ou à offrir 🎁</p>
@@ -122,7 +122,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 
  <div id="content">
   <div class="intro"><p>Tu sens cet appel au fond de toi : quelque chose doit changer.</p><p>Un voyage intérieur en sept épisodes, où tu es le héros, pour renaître comme la rose de Jéricho.</p></div>
-  <div class="avant"><b>Avant d'écouter</b>Un prologue, L&#x27;appel, puis 7 épisodes de 14 à 19 minutes. Casque sur les oreilles, yeux fermés, au calme. Jamais en conduisant. Écoute-les dans l&#x27;ordre.</div>
+  <div class="avant"><b>Avant d'écouter</b>7 épisodes de 14 à 19 minutes. Casque sur les oreilles, yeux fermés, au calme. Jamais en conduisant. Écoute-les dans l&#x27;ordre.</div>
   <section class="film" id="filmBox" hidden><video id="film" controls playsinline preload="none"></video><p class="fnote" id="fnote"></p></section>
   <div id="blocs"></div>
   <section class="docs" id="docs" hidden><div class="bloc"><h2>Tes documents</h2></div><div id="docList"></div></section>
@@ -137,7 +137,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 </div></div>
 <audio id="audio" preload="none"></audio>
 <script>
-const D={"slug": "la-rose-de-jericho", "nom": "La Rose de Jéricho", "blocs": [{"bloc": "Les 7 épisodes", "items": [{"t": "L'appel", "k": "la-rose-de-jericho/intro.mp3", "d": "7 min", "no": "✦"}, {"t": "Épisode 1", "k": "la-rose-de-jericho/episode-01.mp3", "d": "14 min", "no": 1}, {"t": "Épisode 2", "k": "la-rose-de-jericho/episode-02.mp3", "d": "15 min", "no": 2}, {"t": "Épisode 3", "k": "la-rose-de-jericho/episode-03.mp3", "d": "14 min", "no": 3}, {"t": "Épisode 4", "k": "la-rose-de-jericho/episode-04.mp3", "d": "18 min", "no": 4}, {"t": "Épisode 5", "k": "la-rose-de-jericho/episode-05.mp3", "d": "19 min", "no": 5}, {"t": "Épisode 6", "k": "la-rose-de-jericho/episode-06.mp3", "d": "17 min", "no": 6}, {"t": "Épisode 7", "k": "la-rose-de-jericho/episode-07.mp3", "d": "18 min", "no": 7}]}], "docs": [], "jours": false, "teaser": false, "video": null, "tvideo": false};
+const D={"slug": "la-rose-de-jericho", "nom": "La Rose de Jéricho", "blocs": [{"bloc": "Les 7 épisodes", "items": [{"t": "Épisode 1", "k": "la-rose-de-jericho/episode-01.mp3", "d": "14 min"}, {"t": "Épisode 2", "k": "la-rose-de-jericho/episode-02.mp3", "d": "15 min"}, {"t": "Épisode 3", "k": "la-rose-de-jericho/episode-03.mp3", "d": "14 min"}, {"t": "Épisode 4", "k": "la-rose-de-jericho/episode-04.mp3", "d": "18 min"}, {"t": "Épisode 5", "k": "la-rose-de-jericho/episode-05.mp3", "d": "19 min"}, {"t": "Épisode 6", "k": "la-rose-de-jericho/episode-06.mp3", "d": "17 min"}, {"t": "Épisode 7", "k": "la-rose-de-jericho/episode-07.mp3", "d": "18 min"}]}], "docs": [], "jours": false, "teaser": true, "video": null, "tvideo": false};
 const $=id=>document.getElementById(id),audio=$("audio");
 const K=k=>D.slug+"_"+k,g=k=>{try{return localStorage.getItem(K(k))}catch(_){return null}},s=(k,v)=>{try{localStorage.setItem(K(k),v)}catch(_){}};
 const fmt=x=>{x=Math.max(0,Math.floor(x||0));return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")};
