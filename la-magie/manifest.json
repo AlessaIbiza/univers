@@ -1,0 +1,1 @@
+{"name": "La magie", "short_name": "La magie", "id": "/la-magie/", "start_url": "/la-magie/", "scope": "/la-magie/", "display": "standalone", "background_color": "#090813", "theme_color": "#090813", "icons": [{"src": "icon-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}]}
