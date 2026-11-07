@@ -100,7 +100,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
  <p class="kicker">Un programme guidé de Stéphanie Dordain</p>
  <h1>Écrire ton futur</h1>
  <p class="sous">21 jours pour changer la ligne de ton destin</p>
- <button class="teaser" id="teaser" type="button" hidden><span>▶</span> <i id="teaserL">Écouter la bande-annonce</i></button>
+ <button class="teaser" id="yt1" type="button"><span>▶</span> <i>Écouter le premier épisode, offert</i></button>
  <video class="trailer" id="trailer" controls playsinline preload="none" hidden></video>
  <div class="rule" aria-hidden="true"><i></i><b></b><i></i></div>
 
@@ -114,7 +114,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
  </form>
  <section class="buy" id="buy" href="https://www.lamagiedalessa.com/product-page/ecriretonfutur" hidden>
   <h2>Tu n'as pas encore ton programme ?</h2>
-  <div class="tz" style="cursor:default"><img src="cover.jpg" alt=""></div>
+  <button class="teaser" id="yt2" type="button" style="align-self:center"><span>▶</span> <i>Écouter le premier épisode, offert</i></button><div class="tz" style="cursor:default"><img src="cover.jpg" alt=""></div>
   <ul><li>✍️ <b>21 audios</b> en quatre parties : guérir, ton âme, lâcher prise, le nouveau toi</li><li>🎧 <b>4 voyages intérieurs</b>, un à la fin de chaque partie</li><li>♾️ <b>Accès à vie</b>, sur ton téléphone et ton ordinateur</li></ul>
   <a class="go" href="https://www.lamagiedalessa.com/product-page/ecriretonfutur" target="_blank" rel="noopener">Je commande Écrire ton futur</a>
   <p class="off">Pour toi, ou à offrir 🎁</p>
@@ -236,4 +236,6 @@ a=new Audio();a.preload="none";b.onclick=function(){if(!a.src)a.src="teaser.mp3"
 a.onplay=function(){i.textContent="❚❚";i.classList.add("on");l.textContent="Mets ton casque, ferme les yeux…"};a.onpause=function(){i.textContent="▶";i.classList.remove("on");l.textContent="Reprendre la bande-annonce"};
 a.onended=function(){l.textContent="Réécouter la bande-annonce"};a.ontimeupdate=function(){if(a.duration)bar.style.width=(a.currentTime/a.duration*100)+"%"};
 document.addEventListener("play",function(e){if(e.target!==a)a.pause()},true);})();</script>
+<script>(function(){function yt(btn,after){var f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/5DfcEg6wEjg?autoplay=1&rel=0";f.className="trailer";f.title="Écrire ton futur · premier épisode offert";f.allow="autoplay; encrypted-media; picture-in-picture";f.allowFullscreen=true;f.style.border="0";after.after(f);btn.hidden=true;btn.style.display="none"}
+var b1=document.getElementById("yt1"),b2=document.getElementById("yt2");if(b1)b1.onclick=function(){yt(b1,b1)};if(b2)b2.onclick=function(){var t=b2.nextElementSibling;if(t&&t.classList.contains("tz"))t.remove();yt(b2,b2)}})();</script>
 </body></html>
