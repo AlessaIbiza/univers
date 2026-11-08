@@ -1,0 +1,1 @@
+{"name": "Karma, 30 jours", "short_name": "Karma, 30 jours", "id": "/karma-30-jours/", "start_url": "/karma-30-jours/", "scope": "/karma-30-jours/", "display": "standalone", "background_color": "#131008", "theme_color": "#131008", "icons": [{"src": "icon-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}]}

@@ -1,0 +1,1 @@
+{"name": "Trouver sa place", "short_name": "Trouver sa place", "id": "/trouver-sa-place/", "start_url": "/trouver-sa-place/", "scope": "/trouver-sa-place/", "display": "standalone", "background_color": "#130c08", "theme_color": "#130c08", "icons": [{"src": "icon-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}]}

@@ -1,0 +1,1 @@
+{"name": "Sauvage", "short_name": "Sauvage", "id": "/sauvage/", "start_url": "/sauvage/", "scope": "/sauvage/", "display": "standalone", "background_color": "#130b08", "theme_color": "#130b08", "icons": [{"src": "icon-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}]}
