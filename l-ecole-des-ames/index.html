@@ -114,15 +114,15 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
  </form>
  <section class="buy" id="buy" href="https://www.lamagiedalessa.com/product-page/l-%C3%A9cole-des-%C3%A2mes" hidden>
   <h2>Tu n'as pas encore ta série ?</h2>
-  <div class="tz" style="cursor:default"><img src="cover.jpg" alt=""></div>
-  <ul><li>🎧 <b>Une introduction et 3 épisodes</b> de Fiction audio immersive®</li><li>👧 Pour toute la famille, <b>dès 6 ans</b> : chaque enfant devient le héros</li><li>♾️ <b>Accès à vie</b>, sur ton téléphone et ton ordinateur</li></ul>
+  <button class="tz" id="tz" type="button" data-v="0" data-p="cover.jpg" aria-label="Écouter la bande-annonce"><img src="cover.jpg" alt=""><span class="tzp" id="tzi">▶</span><span class="tzl" id="tzl">Écouter la bande-annonce</span><i class="tzb"><b id="tzbb"></b></i></button>
+  <ul><li>🎧 <b>3 épisodes</b> de Fiction audio immersive®</li><li>👧 Pour toute la famille, <b>dès 6 ans</b> : chaque enfant devient le héros</li><li>♾️ <b>Accès à vie</b>, sur ton téléphone et ton ordinateur</li></ul>
   <a class="go" href="https://www.lamagiedalessa.com/product-page/l-%C3%A9cole-des-%C3%A2mes" target="_blank" rel="noopener">Je commande L'école des âmes</a>
   <p class="off">Pour toi, ou à offrir 🎁</p>
  </section>
 
  <div id="content">
   <div class="intro"><p>Un royaume caché attend ceux qui sont prêts à voir.</p><p>Trois épisodes pour petits et grands, où chaque enfant devient le héros de l&#x27;histoire.</p></div>
-  <div class="avant"><b>Avant d'écouter</b>Une introduction, puis 3 épisodes de 14 à 20 minutes. À écouter ensemble, au calme, les yeux fermés.</div>
+  <div class="avant"><b>Avant d'écouter</b>3 épisodes de 14 à 20 minutes. À écouter ensemble, au calme, les yeux fermés.</div>
   <section class="film" id="filmBox" hidden><video id="film" controls playsinline preload="none"></video><p class="fnote" id="fnote"></p></section>
   <div id="blocs"></div>
   <section class="docs" id="docs" hidden><div class="bloc"><h2>Tes documents</h2></div><div id="docList"></div></section>
@@ -137,7 +137,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 </div></div>
 <audio id="audio" preload="none"></audio>
 <script>
-const D={"slug": "l-ecole-des-ames", "nom": "L'école des âmes", "blocs": [{"bloc": "La série", "items": [{"t": "Introduction", "k": "l-ecole-des-ames/intro.mp3", "d": "2 min", "no": "✦"}, {"t": "Épisode 1", "k": "l-ecole-des-ames/episode-01.mp3", "d": "14 min", "no": 1}, {"t": "Épisode 2", "k": "l-ecole-des-ames/episode-02.mp3", "d": "14 min", "no": 2}, {"t": "Épisode 3", "k": "l-ecole-des-ames/episode-03.mp3", "d": "20 min", "no": 3}]}], "docs": [], "jours": false, "teaser": false, "video": null, "tvideo": false};
+const D={"slug": "l-ecole-des-ames", "nom": "L'école des âmes", "blocs": [{"bloc": "La série", "items": [{"t": "Épisode 1", "k": "l-ecole-des-ames/episode-01.mp3", "d": "14 min", "no": 1}, {"t": "Épisode 2", "k": "l-ecole-des-ames/episode-02.mp3", "d": "14 min", "no": 2}, {"t": "Épisode 3", "k": "l-ecole-des-ames/episode-03.mp3", "d": "20 min", "no": 3}]}], "docs": [], "jours": false, "teaser": true, "video": null, "tvideo": false};
 const $=id=>document.getElementById(id),audio=$("audio");
 const K=k=>D.slug+"_"+k,g=k=>{try{return localStorage.getItem(K(k))}catch(_){return null}},s=(k,v)=>{try{localStorage.setItem(K(k),v)}catch(_){}};
 const fmt=x=>{x=Math.max(0,Math.floor(x||0));return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")};
