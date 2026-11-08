@@ -102,7 +102,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;letter-spacing:.2em;t
  main{padding-block:16px 30px}
  .mosaic{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;grid-auto-flow:row}
  .tile{border-radius:8px}
- .tile.big{grid-column:auto;grid-row:auto}
+ .tile.big{grid-column:span 2;grid-row:span 2}
+ .mosaic.flat .tile.big{grid-column:auto;grid-row:auto}
  .promise{grid-template-columns:1fr 1fr;gap:16px;margin-bottom:30px}
  .promise h3{font-size:15px}
  .promise p{font-size:12.5px}
@@ -202,7 +203,16 @@ CATS.forEach(([k,l])=>{const b=document.createElement("button");b.type="button";
 DATA.forEach((d,i)=>{const t=document.createElement("button");t.type="button";t.className="tile"+(BIG.has(d.s)?" big":"");t.dataset.s=d.s;t.setAttribute("aria-label",d.n);t.style.animationDelay=(i*45)+"ms";
  t.innerHTML=`<img src="c/${d.s}.jpg" alt="" loading="${i<12?"eager":"lazy"}"><div class="cap"><span></span><b></b></div>`;
  t.querySelector(".cap span").textContent=KL(d);t.querySelector(".cap b").textContent=d.n;t.onclick=()=>(innerWidth<700?openInline(d,t):openU(d,t));$("mosaic").appendChild(t)});
-function apply(){document.querySelectorAll('.isheet').forEach(x=>x.remove());document.querySelectorAll(".tile").forEach(t=>{t.hidden=!(cur==="tout"||by[t.dataset.s].c.includes(cur))})}
+
+// Mobile : ordre en motif (grande + 2 petites, rangée de 3, petite + grande + petite…) pour garder des tuiles plus grandes
+const ORIG=[...document.querySelectorAll(".tile")];
+function layoutMobile(){const m=$("mosaic");if(innerWidth>=700||cur!=="tout"){ORIG.forEach(t=>m.appendChild(t));m.classList.toggle("flat",innerWidth<700);return}
+ m.classList.remove("flat");const B=ORIG.filter(t=>t.classList.contains("big")),S=ORIG.filter(t=>!t.classList.contains("big")),out=[];let k=0;
+ while(B.length||S.length){if(B.length){if(k%2===0){out.push(B.shift(),...S.splice(0,2))}else{out.push(...S.splice(0,1),B.shift(),...S.splice(0,1))}k++}else{out.push(...S.splice(0,S.length));break}
+  out.push(...S.splice(0,3))}
+ out.filter(Boolean).forEach(t=>m.appendChild(t))}
+function apply(){document.querySelectorAll('.isheet').forEach(x=>x.remove());layoutMobile();document.querySelectorAll(".tile").forEach(t=>{t.hidden=!(cur==="tout"||by[t.dataset.s].c.includes(cur))})}
+apply();let wasM=innerWidth<700;addEventListener("resize",()=>{const m=innerWidth<700;if(m!==wasM){wasM=m;apply()}});
 // poussière d'or
 const cv=$("sky"),cx=cv.getContext("2d");let P=[],W2,H2;const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function rs(){W2=cv.width=innerWidth*devicePixelRatio;H2=cv.height=innerHeight*devicePixelRatio;P=Array.from({length:Math.min(140,Math.round(innerWidth/9))},()=>({x:Math.random()*W2,y:Math.random()*H2,r:(Math.random()*1.6+.4)*devicePixelRatio,v:(Math.random()*.25+.05)*devicePixelRatio,a:Math.random()*Math.PI*2,w:Math.random()*.02+.005}))}
@@ -242,9 +252,11 @@ function openInline(d,tile){aud.pause();document.querySelectorAll(".isheet").for
  if(d.t==="mp3"){full.insertAdjacentHTML("beforeend",`<div class="player"><button class="pp" type="button" id="pp" aria-label="Écouter">▶</button><div style="flex:1;min-width:0"><div style="font-size:13px"></div><div class="bar"><i id="pb"></i></div></div></div>`);full.querySelector(".player div div").textContent=d.tl||"Écoute la bande-annonce";aud.src=`t/${d.s}.mp3`;full.querySelector("#pp").onclick=()=>aud.paused?aud.play():aud.pause()}
  const a=document.createElement("a");a.className="b gold";a.href=d.u;a.target=EMB?"_top":"_blank";a.rel="noopener";a.textContent=d.k==="Série"?"Je veux découvrir cette série":d.k==="Film"?"Je veux découvrir ce film":"Je veux en savoir plus";full.appendChild(a);
  el.querySelector(".xc").onclick=()=>{aud.pause();el.remove()};
- // placer la fiche juste après la rangée de la tuile touchée (3 par rangée sur mobile)
- const vis=[...document.querySelectorAll(".tile:not([hidden])")],cols=getComputedStyle($("mosaic")).gridTemplateColumns.split(" ").length,i=vis.indexOf(tile);
- vis[Math.min(vis.length-1,Math.floor(i/cols)*cols+cols-1)].after(el);
+ // placer la fiche après le groupe de tuiles de la rangée touchée
+ const vis=[...document.querySelectorAll(".tile:not([hidden])")];const tb=tile.offsetTop+tile.offsetHeight-2;
+ let gb=tb;vis.forEach(t=>{if(t.offsetTop<tb)gb=Math.max(gb,t.offsetTop+t.offsetHeight-2)});
+ let after=tile;vis.forEach(t=>{if(t.offsetTop<gb)after=t});after.after(el);
+
 
 burst(innerWidth/2,el.getBoundingClientRect().top,30)}
 function closeU(){aud.pause();O.classList.remove("show");setTimeout(()=>{O.classList.remove("on");document.body.classList.remove("lock");fromTile&&fromTile.focus({preventScroll:true})},RM?0:250)}
