@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>Les univers d'Alessa</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap">
+<style>
+/* Layout : on entre directement dans une mosaïque flottante sous un ciel de poussière d'or ; une tuile s'ouvre en plein écran */
+@font-face{font-family:"GC";src:url(gc.woff) format("woff");font-display:swap}
+:root{--night:#07060a;--night2:#120d16;--fg:#f6eee2;--muted:#bfb1a0;--gold:#e9c98f;--gold2:#c79a52;--line:rgba(233,201,143,.18);
+ --display:"GC","Cormorant Garamond",Georgia,serif;--body:"Jost",system-ui,-apple-system,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--night);color:var(--fg)}
+body{margin:0;font-family:var(--body);font-size:16px;line-height:1.5;overflow-x:hidden}
+body.lock{overflow:hidden}
+.g{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#sky{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1200px 700px at 50% -10%,#2a1d2e 0%,transparent 60%),radial-gradient(900px 600px at 90% 110%,#1b2230 0%,transparent 60%),var(--night)}
+#glow{position:fixed;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(233,201,143,.10),transparent 65%);left:50%;top:40%;transition:opacity .4s}
+.page{position:relative;z-index:2}
+header{text-align:center;padding-block:46px 18px}
+.mark{font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold)}
+h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(34px,6vw,76px);line-height:1;margin:14px 0 10px;letter-spacing:.04em;text-wrap:balance;
+ background:linear-gradient(180deg,#fff7e6 0%,var(--gold) 70%,var(--gold2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 40px rgba(233,201,143,.15)}
+.lead{color:var(--muted);max-width:60ch;margin:0 auto;font-size:clamp(15px,1.6vw,18px);font-weight:300}
+.lead b{color:var(--fg);font-weight:400}
+.filters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:26px auto 0;max-width:1100px}
+.chip{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:999px;padding:8px 16px;font-size:14px;color:var(--muted);cursor:pointer;transition:all .25s;backdrop-filter:blur(6px)}
+.chip:hover{color:var(--fg);border-color:rgba(233,201,143,.45)}
+.chip[aria-pressed="true"]{background:var(--gold);color:#1a120a;border-color:var(--gold);box-shadow:0 0 24px rgba(233,201,143,.35)}
+main{max-width:1320px;margin:0 auto;padding-block:30px 70px}
+.mosaic{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-flow:dense;gap:14px}
+.tile{position:relative;aspect-ratio:1;border:0;padding:0;border-radius:12px;cursor:pointer;background:#000;overflow:hidden;
+ box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 0 1px rgba(233,201,143,.08);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;animation:rise .9s cubic-bezier(.2,.8,.2,1) backwards;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0)) scale(var(--sc,1))}
+.tile.big{grid-column:span 2;grid-row:span 2}
+.tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s cubic-bezier(.2,.8,.2,1),filter .45s}
+.tile:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,240,210,.28) 48%,transparent 62%);transform:translateX(-120%);transition:transform .9s}
+.tile .cap{position:absolute;inset:auto 0 0 0;padding:14px;background:linear-gradient(180deg,transparent,rgba(5,4,8,.9));opacity:0;transform:translateY(8px);transition:all .35s;text-align:left}
+.tile .cap b{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(14px,1.3vw,19px);line-height:1.05}
+.tile .cap span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+@media (hover:hover) and (pointer:fine){
+ .tile:hover,.tile:focus-visible{--ty:-8px;--sc:1.12;z-index:3;box-shadow:0 26px 60px rgba(0,0,0,.7),0 0 0 1px rgba(233,201,143,.55),0 0 50px rgba(233,201,143,.22)}
+ .tile:hover img{transform:scale(1.08);filter:brightness(1.08) saturate(1.1)}
+ .tile:hover:after{transform:translateX(120%)}
+ .tile:hover .cap,.tile:focus-visible .cap{opacity:1;transform:none}
+}
+.tile[hidden]{display:none}
+@media (hover:none){.tile:active{--sc:1.06}}
+@keyframes rise{from{transform:perspective(900px) translateZ(-260px) translateY(40px) rotateX(18deg);filter:brightness(.2)}}
+.promise{max-width:1100px;margin:0 auto 70px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px;text-align:center}
+.promise h3{font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--gold);font-size:20px;margin:0 0 6px;letter-spacing:.04em}
+.promise p{margin:0;color:var(--muted);font-size:14.5px;font-weight:300}
+footer{text-align:center;color:var(--muted);font-size:12px;letter-spacing:.2em;text-transform:uppercase;padding-block:0 40px}
+/* Portail d'entrée */
+#portal{position:fixed;inset:0;z-index:80;background:#030205;display:grid;place-items:center;cursor:pointer;transition:opacity 1s ease .2s}
+#portal.gone{opacity:0;pointer-events:none}
+#portal .ring{position:absolute;width:40px;height:40px;border-radius:50%;border:2px solid rgba(240,210,150,.9);box-shadow:0 0 40px rgba(240,200,130,.8),inset 0 0 40px rgba(240,200,130,.5);animation:ring 2.6s cubic-bezier(.6,0,.2,1) forwards}
+#portal .core{position:absolute;width:12px;height:12px;border-radius:50%;background:#fff3d6;box-shadow:0 0 60px 20px rgba(240,200,130,.7);animation:core 2.6s ease forwards}
+#portal p{position:relative;font-family:var(--display);text-transform:uppercase;letter-spacing:.3em;color:var(--gold);font-size:clamp(14px,2vw,20px);margin:150px 0 0;text-align:center;animation:whisper 2.6s ease forwards}
+@keyframes ring{0%{transform:scale(.2);opacity:0}25%{transform:scale(1);opacity:1}60%{transform:scale(3)}100%{transform:scale(60);opacity:0}}
+@keyframes core{0%{transform:scale(0)}30%{transform:scale(1)}70%{transform:scale(1.4)}100%{transform:scale(120);opacity:0}}
+@keyframes whisper{0%,10%{opacity:0;filter:blur(6px)}35%,65%{opacity:1;filter:none}100%{opacity:0}}
+#flash{position:fixed;inset:0;z-index:70;pointer-events:none;background:radial-gradient(circle at var(--fx,50%) var(--fy,50%),rgba(255,240,205,.85),rgba(240,200,130,.25) 30%,transparent 60%);opacity:0}
+#flash.go{animation:flash .7s ease}
+@keyframes flash{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+/* Plein écran */
+#open{position:fixed;inset:0;z-index:50;display:none;overflow:auto}
+#open.on{display:block}
+#open .bk{position:fixed;inset:-60px;background-size:cover;background-position:center;filter:blur(40px) brightness(.38) saturate(1.3);animation:drift 24s ease-in-out infinite alternate;opacity:0;transition:opacity .6s}
+#open.show .bk{opacity:1}
+#open .veil{position:fixed;inset:0;background:radial-gradient(ellipse at 30% 40%,transparent 0%,rgba(7,6,10,.55) 60%,rgba(7,6,10,.92) 100%)}
+@keyframes drift{from{transform:scale(1.05) translate(0,0)}to{transform:scale(1.18) translate(-2%,1%)}}
+#open .in{position:relative;min-height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,70px);align-items:center;max-width:1240px;margin:0 auto;padding-block:max(60px,env(safe-area-inset-top,0px)) 60px}
+#poster{width:100%;aspect-ratio:1;border-radius:16px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.75),0 0 0 1px rgba(233,201,143,.3),0 0 90px rgba(233,201,143,.18);transform-origin:top left}
+#poster img{width:100%;height:100%;object-fit:cover;display:block}
+#open .txt{opacity:0;transform:translateY(16px);transition:all .6s .25s;min-width:0}
+#open.show .txt{opacity:1;transform:none}
+.kind{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+#open h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(38px,5.6vw,80px);line-height:.98;margin:12px 0 10px;text-wrap:balance}
+#open .sous{font-family:var(--display);text-transform:uppercase;font-size:clamp(17px,1.8vw,22px);letter-spacing:.04em;margin:0 0 14px}
+#open .intro{color:var(--muted);font-size:18px;font-weight:300;margin:0 0 20px;max-width:46ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.meta span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;color:var(--muted)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.b{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:14px 26px;font-weight:500;font-size:15px;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.b:hover{transform:translateY(-2px)}
+.b.gold{background:linear-gradient(180deg,#f3d9a6,var(--gold) 60%,var(--gold2));color:#1a120a;box-shadow:0 10px 30px rgba(233,201,143,.3)}
+.b.ghost{background:rgba(255,255,255,.06);border-color:rgba(246,238,226,.25);color:var(--fg);backdrop-filter:blur(8px)}
+.player{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:18px;max-width:440px}
+.player .pp{width:46px;height:46px;border-radius:50%;border:0;background:var(--gold);color:#1a120a;cursor:pointer;flex:none;font-size:15px;box-shadow:0 0 24px rgba(233,201,143,.4)}
+.player .bar{height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;margin-top:6px}
+.player .bar i{display:block;height:100%;width:0;background:var(--gold)}
+.note{color:var(--muted);font-size:13px;margin-top:16px}
+.x{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:calc(16px + env(safe-area-inset-right,0px));z-index:60;width:46px;height:46px;border-radius:50%;border:1px solid rgba(246,238,226,.25);background:rgba(0,0,0,.45);cursor:pointer;font-size:18px;backdrop-filter:blur(8px)}
+@media (max-width:900px){.mosaic{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:600px){
+ .mosaic{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .tile.big{grid-column:span 2;grid-row:span 2}
+ #open .in{grid-template-columns:1fr;padding-block:70px 40px;gap:22px}
+ #poster{width:78%;margin:0 auto}
+ .filters{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;padding-bottom:4px}
+ .chip{flex:none}
+}
+
+/* Intégrée dans Wix (iframe haute) : tout se place près de l'endroit regardé */
+.embed #portal{align-items:start;place-items:start center;padding-top:220px}
+.embed #portal .ring,.embed #portal .core{top:200px}
+.embed #open .in{align-items:start;min-height:0;padding-top:var(--top,60px)}
+.embed #open .x{position:absolute;top:calc(var(--top,60px) - 50px)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body>
+
+<div id="portal" aria-hidden="true"><div class="ring"></div><div class="core"></div><p>Ferme les yeux…<br>le voyage commence</p></div>
+<div id="flash" aria-hidden="true"></div>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div id="glow" aria-hidden="true"></div>
+<div class="page">
+ <header class="g">
+  <div class="mark">La magie d'Alessa</div>
+  <h1>Entre dans les univers</h1>
+  <p class="lead">Un nouveau genre, la <b>Fiction audio immersive®</b> : un film audio, une série… et le héros, c'est toi. Choisis ton monde, ferme les yeux, et laisse la magie entrer dans ta vie.</p>
+  <div class="filters" id="chips" role="group" aria-label="Filtrer les univers"></div>
+ </header>
+ <main class="g"><div class="mosaic" id="mosaic"></div></main>
+ <section class="promise g">
+  <div><h3>Le héros, c'est toi</h3><p>Hypnose, narration et fiction : une histoire qui transforme vraiment ta réalité.</p></div>
+  <div><h3>Partout, à vie</h3><p>Sur ton téléphone et ton ordinateur, avec ou sans connexion.</p></div>
+  <div><h3>Pour toute la famille</h3><p>Des univers pour les petits magiciens et pour les grands.</p></div>
+  <div><h3>Le cadeau qui se vit</h3><p>Chaque univers s'offre avec son billet cadeau 🎁</p></div>
+ </section>
+ <footer class="g">Stéphanie Dordain · Alessa</footer>
+</div>
+
+<div id="open" role="dialog" aria-modal="true" aria-labelledby="ot">
+ <div class="bk" id="obk"></div><div class="veil"></div>
+ <button class="x" id="ox" type="button" aria-label="Fermer">✕</button>
+ <div class="in g">
+  <div id="poster"><img id="op" alt=""></div>
+  <div class="txt">
+   <div class="kind" id="ok"></div>
+   <h2 id="ot"></h2>
+   <p class="sous" id="os"></p>
+   <p class="intro" id="oi"></p>
+   <div class="meta" id="om"></div>
+   <div id="otr"></div>
+   <div class="cta"><a class="b gold" id="obuy" target="_top"></a></div>
+   <p class="note">Pour toi, ou à offrir 🎁 · Accès à vie, sans fichier à télécharger.</p>
+  </div>
+ </div>
+</div>
+<audio id="aud" preload="none"></audio>
+
+<script>
+const DATA=[{"s": "lilith", "n": "Lilith", "k": "Série", "sous": "La vérité cachée sur l'origine de l'humanité", "i": "Tu n'écoutes pas Lilith. Tu la traverses.", "f": "7 épisodes", "c": ["serie", "ame", "feminin"], "u": "https://www.lamagiedalessa.com/product-page/lilith", "t": "mp3"}, {"s": "vivant", "n": "Vivant", "k": "Voyage intérieur", "sous": "Voyage au centre de la Terre", "i": "Reviens à ce qu'il y a de plus vivant en toi.", "f": "Voyage + défi 7 jours + Georges", "c": ["ame", "guerir"], "u": "https://www.lamagiedalessa.com/product-page/vivant-voyage-au-centre-de-la-terre", "t": "mp3"}, {"s": "voyage-au-coeur-d-atlantide", "n": "Voyage au cœur d'Atlantide", "k": "Série", "sous": "Guérir et activer ton pouvoir intérieur", "i": "Embarque pour un voyage extraordinaire au cœur d'Atlantide.", "f": "7 épisodes", "c": ["serie", "guerir"], "u": "https://www.lamagiedalessa.com/product-page/guerir-et-activer-son-pouvoir-interieur", "t": ""}, {"s": "eveil-des-atlantes", "n": "L'éveil des Atlantes", "k": "Série", "sous": "Le passage est ouvert", "i": "Ici, tu ne regardes pas l'histoire. Tu la vis.", "f": "7 épisodes", "c": ["serie", "ame"], "u": "https://www.lamagiedalessa.com/product-page/l-%C3%A9veil-des-atlantes", "t": "mp3"}, {"s": "saba", "n": "Saba", "k": "Série", "sous": "La quête des âmes jumelles", "i": "Saba, c'est toi.", "f": "7 épisodes", "c": ["serie", "feminin", "ame"], "u": "https://www.lamagiedalessa.com/product-page/saba", "t": "mp3"}, {"s": "karma-serie", "n": "Karma", "k": "Série", "sous": "La série dont tu es le héros", "i": "Et si l'histoire n'était pas celle qu'on nous a racontée ?", "f": "7 épisodes", "c": ["serie", "guerir"], "u": "https://www.lamagiedalessa.com/product-page/karma", "t": "mp3"}, {"s": "se-connecter-a-son-ame", "n": "Se connecter à son âme", "k": "Série", "sous": "Voyage au cœur de ton âme", "i": "Et si tu revenais à l'origine de ta vie ?", "f": "7 épisodes", "c": ["serie", "ame"], "u": "https://www.lamagiedalessa.com/product-page/voyage-au-coeur-de-son-%C3%A2me", "t": ""}, {"s": "la-rose-de-jericho", "n": "La Rose de Jéricho", "k": "Série", "sous": "Incarner le divin sur Terre", "i": "Tu sens cet appel au fond de toi : quelque chose doit changer.", "f": "L'appel + 7 épisodes", "c": ["serie", "ame", "guerir"], "u": "https://www.lamagiedalessa.com/product-page/la-rose-de-jericho-incarne-le-divin-sur-terre", "t": "mp3"}, {"s": "foret-des-ames", "n": "La forêt des âmes", "k": "Série", "sous": "Découvre les dons et pouvoirs qui dorment en toi", "i": "Voici un nouveau voyage intérieur, un voyage durant lequel tu seras le héros.", "f": "7 épisodes", "c": ["serie", "ame"], "u": "https://www.lamagiedalessa.com/product-page/le-secret-de-la-for%C3%AAt-des-%C3%A2mes-d%C3%A9couvre-les-dons-et-pouvoirs-qui-dorment-en-toi", "t": "mp3"}, {"s": "la-princesse-du-desert", "n": "La princesse du désert", "k": "Série", "sous": "Reprendre son pouvoir et trouver sa place", "i": "Tu t'es toujours relevée. Aujourd'hui, tu vas te souvenir de qui tu es.", "f": "7 épisodes", "c": ["serie", "feminin"], "u": "https://www.lamagiedalessa.com/product-page/la-princesse-du-d%C3%A9sert", "t": "mp3"}, {"s": "karma-le-film", "n": "Karma", "k": "Film", "sous": "Le film qui va changer ta vie", "i": "Tu crois regarder un film… mais c'est lui qui te regarde.", "f": "Film immersif", "c": ["serie", "guerir"], "u": "https://www.lamagiedalessa.com/karma-le-film", "t": "mp3"}, {"s": "la-puissance-du-feminin", "n": "La puissance du féminin", "k": "Série", "sous": "Éveiller ton féminin sacré", "i": "Prête à rencontrer les déesses qui ont changé le monde ?", "f": "7 épisodes", "c": ["serie", "feminin"], "u": "https://www.lamagiedalessa.com/product-page/comment-activer-et-decouvrir-son-feminin-sacre", "t": ""}, {"s": "l-ecole-des-ames", "n": "L'école des âmes", "k": "Série", "sous": "Retrouver la magie en soi, dès 6 ans", "i": "Un royaume caché attend ceux qui sont prêts à voir.", "f": "3 épisodes · dès 6 ans", "c": ["serie", "enfants"], "u": "https://www.lamagiedalessa.com/product-page/l-%C3%A9cole-des-%C3%A2mes", "t": "mp3"}, {"s": "je-manifeste", "n": "Je manifeste", "k": "Programme", "sous": "30 jours pour manifester ta nouvelle réalité", "i": "Tout commence par toi.", "f": "30 jours", "c": ["abondance"], "u": "https://www.lamagiedalessa.com/product-page/30-jours-pour-manifester-mes-r%C3%AAves", "t": "mp3"}, {"s": "le-message-des-arbres", "n": "Le message des arbres", "k": "Oracle audio", "sous": "30 guidances pour guérir et grandir", "i": "Chaque jour, les arbres ont un message pour toi.", "f": "30 messages + livre", "c": ["guerir", "rituels"], "u": "https://www.lamagiedalessa.com/product-page/le-message-des-arbres-30-guidances-quotidiennes", "t": "mp3"}, {"s": "miracle", "n": "MIRACLE", "k": "Programme", "sous": "28 jours pour faire de ta vie un miracle", "i": "Et si tu changeais ta façon de voir… et que les miracles apparaissaient partout ?", "f": "28 jours", "c": ["abondance"], "u": "https://www.lamagiedalessa.com/product-page/miracle", "t": "mp3"}, {"s": "amor", "n": "AMOR", "k": "Programme", "sous": "30 jours pour remplir le vide en soi et te sentir entier", "i": "Ce vide en toi n'est pas une fatalité. C'est un rappel de qui tu es vraiment.", "f": "30 jours", "c": ["guerir", "feminin"], "u": "https://www.lamagiedalessa.com/product-page/amor-30-jours-pour-remplir-le-vide-en-soi-et-se-sentir-entier", "t": ""}, {"s": "l-appel-des-gardiens", "n": "L'Appel des Gardiens", "k": "Programme", "sous": "30 jours pour retrouver le sens de ta vie", "i": "Se souvenir de qui l'on est. Et œuvrer pour plus grand que soi.", "f": "30 jours", "c": ["ame", "guerir"], "u": "https://www.lamagiedalessa.com/product-page/30-jours-pour-retrouver-le-sens-de-ta-vie", "t": "mp3", "tl": "Écoute le premier voyage, offert"}, {"s": "30-jours-pour-renaitre", "n": "30 jours pour renaître", "k": "Programme", "sous": "30 jours pour transformer ta vie", "i": "Renaître, c'est oser laisser partir l'ancien.", "f": "30 jours", "c": ["guerir"], "u": "https://www.lamagiedalessa.com/product-page/30-jours-pour-renaitre", "t": ""}, {"s": "ecrire-ton-futur", "n": "Écrire ton futur", "k": "Programme", "sous": "21 jours pour changer la ligne de ton destin", "i": "Et si tu pouvais réécrire la suite de ton histoire ?", "f": "21 jours", "c": ["abondance"], "u": "https://www.lamagiedalessa.com/product-page/ecriretonfutur", "t": "mp3", "tl": "Écoute le début du premier épisode, offert"}, {"s": "30-jours-pour-attirer-l-amour", "n": "30 jours pour attirer l'amour", "k": "Programme", "sous": "Attirer l'amour véritable", "i": "L'amour véritable commence par celui que tu te portes.", "f": "30 jours", "c": ["feminin"], "u": "https://www.lamagiedalessa.com/product-page/30-jours-pour-attirer-l-amour", "t": "mp3"}, {"s": "21-jours-pour-activer-l-abondance", "n": "21 jours d'abondance", "k": "Programme", "sous": "Activer l'abondance et réaliser tes rêves", "i": "L'abondance est déjà en toi. Elle attend que tu lui ouvres la porte.", "f": "21 jours", "c": ["abondance"], "u": "https://www.lamagiedalessa.com/product-page/21-jours-pour-activer-l-abondance-et-realiser-tes-reves", "t": ""}, {"s": "la-magie", "n": "La magie", "k": "Rituels", "sous": "7 rituels de sorcières", "i": "Associe l'action à l'intention.", "f": "7 rituels", "c": ["rituels"], "u": "https://www.lamagiedalessa.com/product-page/la-magie-7-rituels-de-sorciere", "t": "mp3", "tl": "Écoute l'introduction"}, {"s": "moon", "n": "MOON", "k": "Rituels", "sous": "Tes rituels de nouvelle lune et de pleine lune", "i": "À chaque lune, un rendez-vous sacré avec toi-même.", "f": "Rituels de lune", "c": ["rituels"], "u": "https://www.lamagiedalessa.com/product-page/moon", "t": ""}, {"s": "30-jours-de-magie", "n": "30 jours de magie", "k": "Coffret", "sous": "Dès 4 ans, un audio chaque matin", "i": "Chaque matin, un rendez-vous magique pour les petits magiciens et Gardiens de la Terre.", "f": "30 audios · dès 4 ans", "c": ["enfants", "rituels"], "u": "https://www.lamagiedalessa.com/product-page/30-jours-de-magie", "t": "mp3"}];
+const CATS=[["tout","Tout"],["serie","Séries immersives"],["guerir","Pour guérir"],["ame","Se connecter à son âme"],["feminin","Féminin & amour"],["abondance","Abondance & rêves"],["enfants","Enfants & famille"],["rituels","Rituels & magie"]];
+const BIG=new Set(["lilith","vivant","voyage-au-coeur-d-atlantide","karma-serie","eveil-des-atlantes"]);
+const EMB=window.self!==window.top;if(EMB)document.documentElement.classList.add('embed');
+const $=id=>document.getElementById(id),by=Object.fromEntries(DATA.map(d=>[d.s,d]));
+const KL=d=>d.k==="Série"?"Fiction audio immersive®":d.k==="Film"?"Film immersif":d.k;
+let cur="tout";
+CATS.forEach(([k,l])=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=l;b.setAttribute("aria-pressed",k===cur);
+ b.onclick=()=>{cur=k;document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===b));apply()};$("chips").appendChild(b)});
+DATA.forEach((d,i)=>{const t=document.createElement("button");t.type="button";t.className="tile"+(BIG.has(d.s)?" big":"");t.dataset.s=d.s;t.setAttribute("aria-label",d.n);t.style.animationDelay=(i*45)+"ms";
+ t.innerHTML=`<img src="c/${d.s}.jpg" alt="" loading="${i<12?"eager":"lazy"}"><div class="cap"><span></span><b></b></div>`;
+ t.querySelector(".cap span").textContent=KL(d);t.querySelector(".cap b").textContent=d.n;t.onclick=()=>openU(d,t);$("mosaic").appendChild(t)});
+function apply(){document.querySelectorAll(".tile").forEach(t=>{t.hidden=!(cur==="tout"||by[t.dataset.s].c.includes(cur))})}
+// poussière d'or
+const cv=$("sky"),cx=cv.getContext("2d");let P=[],W2,H2;const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function rs(){W2=cv.width=innerWidth*devicePixelRatio;H2=cv.height=innerHeight*devicePixelRatio;P=Array.from({length:Math.min(140,Math.round(innerWidth/9))},()=>({x:Math.random()*W2,y:Math.random()*H2,r:(Math.random()*1.6+.4)*devicePixelRatio,v:(Math.random()*.25+.05)*devicePixelRatio,a:Math.random()*Math.PI*2,w:Math.random()*.02+.005}))}
+function fr(){cx.clearRect(0,0,W2,H2);const g=cx.createRadialGradient(W2/2,-H2*.1,0,W2/2,-H2*.1,W2*.7);g.addColorStop(0,"#2a1d2e");g.addColorStop(1,"#07060a");cx.fillStyle=g;cx.fillRect(0,0,W2,H2);
+ P=P.filter(p=>p.life===undefined||p.life-->0);for(const p of P){if(p.vx!==undefined){p.x+=p.vx;p.y+=p.vy;p.vx*=.96;p.vy*=.96}p.y-=p.v;p.a+=p.w;p.x+=Math.sin(p.a)*.3;if(p.y<-5){p.y=H2+5;p.x=Math.random()*W2}const tw=.45+.55*Math.sin(p.a*3);cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fillStyle=`rgba(240,210,150,${.25+.55*tw})`;cx.shadowColor="rgba(240,200,130,.9)";cx.shadowBlur=8*devicePixelRatio;cx.fill()}
+ cx.shadowBlur=0;if(!RM)requestAnimationFrame(fr)}
+addEventListener("resize",rs);rs();fr();
+addEventListener("pointermove",e=>{const g=$("glow");g.style.left=e.clientX+"px";g.style.top=e.clientY+"px"});
+// portail
+const PO=$("portal");function enter(){if(PO.classList.contains("gone"))return;PO.classList.add("gone");burst(innerWidth/2,innerHeight/2,90)}
+PO.onclick=enter;setTimeout(enter,RM?0:2300);
+function burst(x,y,n){for(let i=0;i<n;i++){const a=Math.random()*7,v=(Math.random()*6+2)*devicePixelRatio;P.push({x:x*devicePixelRatio,y:y*devicePixelRatio,r:(Math.random()*1.8+.6)*devicePixelRatio,v:0,a,w:.02,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:70})}}
+// inclinaison 3D des tuiles
+document.querySelectorAll(".tile").forEach(t=>{t.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;const r=t.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;t.style.setProperty("--ry",(x*14)+"deg");t.style.setProperty("--rx",(-y*14)+"deg")});
+ t.addEventListener("pointerleave",()=>{t.style.removeProperty("--rx");t.style.removeProperty("--ry")})});
+// ouverture plein écran
+const aud=$("aud"),O=$("open");let fromTile=null;
+function openU(d,tile){fromTile=tile;aud.pause();const R=tile.getBoundingClientRect(),F=$("flash");F.style.setProperty("--fx",(R.left+R.width/2)+"px");F.style.setProperty("--fy",(R.top+R.height/2)+"px");F.classList.remove("go");void F.offsetWidth;if(!RM)F.classList.add("go");burst(R.left+R.width/2,R.top+R.height/2,50);
+ $("obk").style.backgroundImage=`url(c/${d.s}.jpg)`;$("op").src=`c/${d.s}.jpg`;$("ok").textContent=KL(d);$("ot").textContent=d.n;$("os").textContent=d.sous;$("oi").textContent=d.i;
+ $("om").innerHTML="";[d.f,"Accès à vie","Téléphone et ordinateur"].forEach(x=>{const s=document.createElement("span");s.textContent=x;$("om").appendChild(s)});
+ $("obuy").href=d.u;$("obuy").textContent=d.k==="Série"?"Je veux découvrir cette série":d.k==="Film"?"Je veux découvrir ce film":"Je veux en savoir plus";
+ const tr=$("otr");tr.innerHTML="";
+ if(d.t==="mp3"){tr.innerHTML=`<div class="player"><button class="pp" type="button" id="pp" aria-label="Écouter">▶</button><div style="flex:1;min-width:0"><div style="font-size:14px">${d.tl||"Écoute la bande-annonce"}</div><div class="bar"><i id="pb"></i></div></div></div>`;aud.src=`t/${d.s}.mp3`;$("pp").onclick=()=>aud.paused?aud.play():aud.pause()}
+
+ if(EMB){O.style.setProperty('--top',Math.max(70,tile.getBoundingClientRect().top-260)+'px')}O.classList.add("on");if(!EMB)document.body.classList.add("lock");O.scrollTop=0;
+ requestAnimationFrame(()=>{const p=$("poster"),a=tile.getBoundingClientRect(),b=p.getBoundingClientRect();
+  if(!RM&&b.width){p.animate([{transform:`translate(${a.left-b.left}px,${a.top-b.top}px) scale(${a.width/b.width})`},{transform:"none"}],{duration:650,easing:"cubic-bezier(.2,.8,.2,1)"})}
+  O.classList.add("show");$("ox").focus({preventScroll:true})})}
+function closeU(){aud.pause();O.classList.remove("show");setTimeout(()=>{O.classList.remove("on");document.body.classList.remove("lock");fromTile&&fromTile.focus({preventScroll:true})},RM?0:250)}
+$("ox").onclick=closeU;addEventListener("keydown",e=>{if(e.key==="Escape"&&O.classList.contains("on"))closeU()});
+aud.addEventListener("timeupdate",()=>{const b=$("pb");if(b&&aud.duration)b.style.width=100*aud.currentTime/aud.duration+"%"});
+aud.addEventListener("play",()=>{const p=$("pp");if(p)p.textContent="❚❚"});aud.addEventListener("pause",()=>{const p=$("pp");if(p)p.textContent="▶"});
+</script>
+
+</body></html>
