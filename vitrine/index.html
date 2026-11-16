@@ -147,6 +147,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;letter-spacing:.2em;t
 .isheet .b{justify-content:center;padding:12px 18px;font-size:14px}
 .isheet .xc{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(246,238,226,.25);background:rgba(0,0,0,.45);color:var(--fg);font-size:14px;cursor:pointer}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.cmd{display:inline-block;margin:10px 0 0 14px;font-size:14px;color:inherit;opacity:.75;text-decoration:underline;text-underline-offset:3px}
+.cmd:hover{opacity:1}
 </style>
 </head><body>
 
@@ -184,7 +186,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;letter-spacing:.2em;t
    <p class="intro" id="oi"></p>
    <div class="meta" id="om"></div>
    <div id="otr"></div>
-   <div class="cta"><a class="b gold" id="obuy" target="_top"></a></div>
+   <div class="cta"><a class="b gold" id="obuy" target="_top"></a><a class="cmd" id="ocmd" target="_top" rel="noopener">Commander</a></div>
    <p class="note">Pour toi, ou à offrir 🎁 · Accès à vie, sans fichier à télécharger.</p>
   </div>
  </div>
@@ -235,7 +237,7 @@ const aud=$("aud"),O=$("open");let fromTile=null;
 function openU(d,tile){fromTile=tile;aud.pause();const R=tile.getBoundingClientRect(),F=$("flash");F.style.setProperty("--fx",(R.left+R.width/2)+"px");F.style.setProperty("--fy",(R.top+R.height/2)+"px");F.classList.remove("go");void F.offsetWidth;if(!RM)F.classList.add("go");burst(R.left+R.width/2,R.top+R.height/2,50);
  $("obk").style.backgroundImage=`url(c/${d.s}.jpg)`;$("op").src=`c/${d.s}.jpg`;$("ok").textContent=KL(d);$("ot").textContent=d.n;$("os").textContent=d.sous;$("oi").textContent=d.i;
  $("om").innerHTML="";[d.f,"Accès à vie","Téléphone et ordinateur"].forEach(x=>{const s=document.createElement("span");s.textContent=x;$("om").appendChild(s)});
- $("obuy").href=d.u;$("obuy").textContent=d.k==="Série"?"Je veux découvrir cette série":d.k==="Film"?"Je veux découvrir ce film":"Je veux en savoir plus";
+ $("obuy").href=UV(d);$("obuy").textContent="Entrer dans l'univers";$("ocmd").href=d.u;
  const tr=$("otr");tr.innerHTML="";
  if(d.t==="mp3"){tr.innerHTML=`<div class="player"><button class="pp" type="button" id="pp" aria-label="Écouter">▶</button><div style="flex:1;min-width:0"><div style="font-size:14px">${d.tl||"Écoute la bande-annonce"}</div><div class="bar"><i id="pb"></i></div></div></div>`;aud.src=`t/${d.s}.mp3`;$("pp").onclick=()=>aud.paused?aud.play():aud.pause()}
  else if(d.t==="mp4"){tr.innerHTML=vt(d)}
@@ -246,6 +248,7 @@ function openU(d,tile){fromTile=tile;aud.pause();const R=tile.getBoundingClientR
   if(!RM&&b.width){p.animate([{transform:`translate(${a.left-b.left}px,${a.top-b.top}px) scale(${a.width/b.width})`},{transform:"none"}],{duration:650,easing:"cubic-bezier(.2,.8,.2,1)"})}
   O.classList.add("show");$("ox").focus({preventScroll:true})})}
 
+const UV=d=>d.s==="vivant"?"https://georges.gardiendelaterre.com/vivant/":"https://univers.lamagiedalessa.com/"+d.s+"/";
 const vt=d=>`<video class="tvid" controls playsinline preload="metadata" poster="../${d.s}/poster.jpg" src="../${d.s}/teaser.mp4" style="display:block;width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;margin:6px 0 12px"></video>`;
 const stopV=()=>{document.querySelectorAll("video.tvid").forEach(v=>v.pause());document.querySelectorAll("iframe.tvid").forEach(f=>f.remove())};
 const yt=d=>`<iframe class="tvid" src="https://www.youtube-nocookie.com/embed/${d.y}?rel=0" title="Bande-annonce" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy" style="display:block;width:100%;aspect-ratio:16/9;border:0;background:#000;border-radius:10px;margin:6px 0 12px"></iframe>`;
@@ -259,7 +262,8 @@ function openInline(d,tile){aud.pause();stopV();document.querySelectorAll(".ishe
  if(d.t==="mp3"){full.insertAdjacentHTML("beforeend",`<div class="player"><button class="pp" type="button" id="pp" aria-label="Écouter">▶</button><div style="flex:1;min-width:0"><div style="font-size:13px"></div><div class="bar"><i id="pb"></i></div></div></div>`);full.querySelector(".player div div").textContent=d.tl||"Écoute la bande-annonce";aud.src=`t/${d.s}.mp3`;full.querySelector("#pp").onclick=()=>aud.paused?aud.play():aud.pause()}
  else if(d.t==="mp4"){full.insertAdjacentHTML("beforeend",vt(d))}
  else if(d.t==="yt"){full.insertAdjacentHTML("beforeend",yt(d))}
- const a=document.createElement("a");a.className="b gold";a.href=d.u;a.target=EMB?"_top":"_blank";a.rel="noopener";a.textContent=d.k==="Série"?"Je veux découvrir cette série":d.k==="Film"?"Je veux découvrir ce film":"Je veux en savoir plus";full.appendChild(a);
+ const a=document.createElement("a");a.className="b gold";a.href=UV(d);a.target=EMB?"_top":"_blank";a.rel="noopener";a.textContent="Entrer dans l'univers";full.appendChild(a);
+ const c=document.createElement("a");c.className="cmd";c.href=d.u;c.target=EMB?"_top":"_blank";c.rel="noopener";c.textContent="Commander";full.appendChild(c);
  el.querySelector(".xc").onclick=()=>{aud.pause();stopV();el.remove()};
  // placer la fiche après le groupe de tuiles de la rangée touchée
  const vis=[...document.querySelectorAll(".tile:not([hidden])")];const tb=tile.offsetTop+tile.offsetHeight-2;
